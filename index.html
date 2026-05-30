@@ -2,6 +2,7 @@
 
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style type="text/css">
         ol {
             margin: 0;
@@ -170,6 +171,319 @@
             widows: 2;
             text-align: left
         }
+
+        /* --- PREMIUM COMPACT AUTO-SCROLL CONTROL STYLES --- */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap');
+
+        #scroll-progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
+            width: 0%;
+            z-index: 100000;
+            transition: width 0.1s ease-out;
+        }
+
+        .autoscroll-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 250px;
+            height: 38px;
+            background: rgba(15, 23, 42, 0.7);
+            /* Highly transparent Slate 900 Glass */
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 19px;
+            /* Circular ends */
+            padding: 0 10px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.25);
+            font-family: 'Inter', 'Sarabun', system-ui, -apple-system, sans-serif;
+            color: #f8fafc;
+            z-index: 99999;
+            transition: width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                height 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                border-radius 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                bottom 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                padding 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .autoscroll-container.collapsed {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            padding: 0;
+            bottom: 20px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1.5px solid rgba(99, 102, 241, 0.6);
+            box-shadow: 0 0 12px rgba(99, 102, 241, 0.3), 0 5px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .autoscroll-container.collapsed .widget-content {
+            display: none;
+        }
+
+        .widget-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            height: 100%;
+        }
+
+        .ctrl-btn {
+            background: transparent;
+            border: none;
+            color: #cbd5e1;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            width: 26px;
+            height: 26px;
+        }
+
+        .ctrl-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .ctrl-btn:active {
+            transform: scale(0.9);
+        }
+
+        .divider {
+            width: 1px;
+            height: 14px;
+            background: rgba(255, 255, 255, 0.15);
+            margin: 0 2px;
+        }
+
+        /* Play Pill Button */
+        .play-pill {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.3);
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .play-pill:hover {
+            transform: scale(1.08);
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.5);
+        }
+
+        .play-pill:active {
+            transform: scale(0.9);
+        }
+
+        /* Speed Control Pill inside container */
+        .speed-pill {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 1px 4px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .speed-adj-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .speed-adj-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        #speed-indicator {
+            font-size: 10px;
+            font-weight: 700;
+            color: #a5b4fc;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        /* Collapsed Trigger */
+        .mini-trigger-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: all 0.2s ease;
+        }
+
+        .mini-trigger-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .scroll-status-badge {
+            position: fixed;
+            bottom: 70px;
+            /* Right above the pill container */
+            left: 50%;
+            transform: translateX(-50%) translateY(5px);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 4px 10px;
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 9px;
+            font-family: 'Inter', 'Sarabun', system-ui, sans-serif;
+            pointer-events: none;
+            z-index: 99998;
+            opacity: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .scroll-status-badge.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #10b981;
+        }
+
+        .status-dot.pulsing {
+            animation: status-pulse 1.6s infinite;
+        }
+
+        @keyframes status-pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+                box-shadow: 0 0 6px #10b981;
+            }
+
+            50% {
+                transform: scale(1.3);
+                opacity: 0.5;
+                box-shadow: 0 0 10px #10b981;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+                box-shadow: 0 0 6px #10b981;
+            }
+        }
+
+        /* --- MOBILE & IPAD RESPONSIVE OPTIMIZATIONS --- */
+        @media (max-width: 1024px) {
+            body.c3 {
+                padding: 24px 16px !important;
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+            }
+
+            /* Enable word wrap and handle long texts */
+            p,
+            span,
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                max-width: 100% !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+            }
+
+            /* Responsive auto-scaling for images exported with absolute width/height */
+            span[style*="width"],
+            img[style*="width"],
+            p[style*="width"] {
+                max-width: 100% !important;
+                height: auto !important;
+                width: auto !important;
+            }
+
+            span[style*="display: inline-block"] {
+                display: block !important;
+                max-width: 100% !important;
+                margin: 16px auto !important;
+            }
+
+            /* Optimize typography size & line height for readable mobile display */
+            p.c2 span.c0 {
+                font-size: 16pt !important;
+                line-height: 1.4 !important;
+            }
+
+            p.c2 {
+                text-align: center !important;
+                /* Centered texts feel premium on mobile readouts */
+            }
+
+            /* Shrink widgets slightly on tiny viewports so they don't crowd the view */
+            .autoscroll-container {
+                bottom: 16px;
+                padding: 12px;
+            }
+
+            .autoscroll-container.collapsed {
+                bottom: 16px;
+            }
+
+            .scroll-status-badge {
+                bottom: 84px;
+            }
+        }
     </style>
 </head>
 
@@ -268,16 +582,283 @@
                 alt="" src="images/image15.png"
                 style="width: 870.12px; height: 1175.80px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
                 title=""></span></p>
-    <p class="c2"><span class="c0">สาลิกาลิ้นทอง</span></p
-        style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1500px; height: 500px;">
-    <img alt="" src="images/salika.png"
-        style="width: 1500px; height: 500px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
-        title=""></span></p>
-    <p class="c2"><span class="c0">หมาคาบเกิบ</span></p
-        style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 930px; height: 1290px;">
-    <img alt="" src="images/61493.png"
-        style="width: 930px; height: 1290px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
-        title=""></span></p>
+    <p class="c2"><span class="c0">สาลิกาลิ้นทอง</span></p>
+    <p class="c2"><span
+            style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1500px; height: 500px;"><img
+                alt="" src="images/salika.png"
+                style="width: 1500px; height: 500px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
+                title=""></span></p>
+    <p class="c2"><span class="c0">หมาคาบเกิบ</span></p>
+    <p class="c2"><span
+            style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 930px; height: 1290px;"><img
+                alt="" src="images/61493.png"
+                style="width: 930px; height: 1290px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
+                title=""></span></p>
+    <!-- --- SCROLL PROGRESS BAR --- -->
+    <div id="scroll-progress-bar"></div>
+
+    <!-- --- FLOATING AUTO-SCROLL CONTROLS --- -->
+    <div id="autoscroll-widget" class="autoscroll-container">
+        <div class="widget-content">
+            <!-- Home Button -->
+            <button id="autoscroll-top-btn" class="ctrl-btn" title="กลับไปบนสุด (Home)">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10">
+                    </path>
+                </svg>
+            </button>
+
+            <div class="divider"></div>
+
+            <!-- Play/Pause Pill Button -->
+            <button id="autoscroll-play-btn" class="play-pill paused" title="เริ่ม / หยุด เลื่อนหน้าจอ">
+                <!-- Play SVG -->
+                <svg id="svg-play" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"
+                    style="margin-left: 1px;">
+                    <polygon points="6 4 20 12 6 20 6 4"></polygon>
+                </svg>
+                <!-- Pause SVG -->
+                <svg id="svg-pause" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"
+                    style="display:none;">
+                    <rect x="6" y="4" width="3" height="16" rx="0.5"></rect>
+                    <rect x="15" y="4" width="3" height="16" rx="0.5"></rect>
+                </svg>
+            </button>
+
+            <div class="divider"></div>
+
+            <!-- Speed Adjuster Pill -->
+            <div class="speed-pill">
+                <button id="speed-down-btn" class="speed-adj-btn" title="ลดความเร็ว">
+                    <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="3" fill="none"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+                <span id="speed-indicator">0.2x</span>
+                <button id="speed-up-btn" class="speed-adj-btn" title="เพิ่มความเร็ว">
+                    <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="3" fill="none"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Collapse Toggle Button -->
+            <button id="autoscroll-toggle-collapse" class="ctrl-btn" title="ย่อหน้าต่าง">
+                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="4 14 10 14 10 20"></polyline>
+                    <polyline points="20 10 14 10 14 4"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Tiny trigger shown when collapsed -->
+        <button id="autoscroll-mini-trigger" class="mini-trigger-btn" style="display:none;" title="ขยายแผงควบคุม">
+            <svg id="svg-mini-play" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"
+                style="margin-left: 1px;">
+                <polygon points="6 4 20 12 6 20 6 4"></polygon>
+            </svg>
+            <svg id="svg-mini-pause" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"
+                style="display:none;">
+                <rect x="6" y="4" width="3" height="16" rx="0.5"></rect>
+                <rect x="15" y="4" width="3" height="16" rx="0.5"></rect>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Active Scrolling Toast Badge -->
+    <div id="scroll-status-badge" class="scroll-status-badge">
+        <div class="status-dot pulsing"></div>
+        <span>กำลังเลื่อนอัตโนมัติ...</span>
+    </div>
+
+    <!-- Auto Scrolling Logic -->
+    <script>
+        (function () {
+            let isScrolling = false;
+            let speed = 0.2; // Optimized default speed for guitar chords reading
+            let animationFrameId = null;
+            let fractionalPosition = window.scrollY;
+            let autoScrollingCompleted = false;
+
+            // DOM Elements
+            const widget = document.getElementById('autoscroll-widget');
+            const playBtn = document.getElementById('autoscroll-play-btn');
+            const topBtn = document.getElementById('autoscroll-top-btn');
+            const toggleCollapseBtn = document.getElementById('autoscroll-toggle-collapse');
+            const miniTriggerBtn = document.getElementById('autoscroll-mini-trigger');
+            const speedUpBtn = document.getElementById('speed-up-btn');
+            const speedDownBtn = document.getElementById('speed-down-btn');
+            const speedIndicator = document.getElementById('speed-indicator');
+            const scrollProgressBar = document.getElementById('scroll-progress-bar');
+            const scrollStatusBadge = document.getElementById('scroll-status-badge');
+
+            const svgPlay = document.getElementById('svg-play');
+            const svgPause = document.getElementById('svg-pause');
+            const svgMiniPlay = document.getElementById('svg-mini-play');
+            const svgMiniPause = document.getElementById('svg-mini-pause');
+
+            // Sync progress bar, manual scrolling, and detect bottom
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight;
+                const winHeight = window.innerHeight;
+                const totalScrollable = docHeight - winHeight;
+
+                if (totalScrollable > 0) {
+                    const scrollPercent = (scrollTop / totalScrollable) * 100;
+                    if (scrollProgressBar) {
+                        scrollProgressBar.style.width = scrollPercent + '%';
+                    }
+                }
+
+                if (Math.abs(scrollTop - fractionalPosition) > 2) {
+                    fractionalPosition = scrollTop;
+                }
+
+                if (totalScrollable > 0 && (scrollTop + winHeight) >= docHeight - 2) {
+                    if (isScrolling) {
+                        pauseScrolling();
+                        autoScrollingCompleted = true;
+                    }
+                } else {
+                    autoScrollingCompleted = false;
+                }
+            });
+
+            function scrollLoop() {
+                if (!isScrolling) return;
+
+                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+
+                if (fractionalPosition >= maxScroll - 0.5) {
+                    pauseScrolling();
+                    window.scrollTo(window.scrollX, maxScroll);
+                    return;
+                }
+
+                fractionalPosition += speed;
+                window.scrollTo(window.scrollX, Math.floor(fractionalPosition));
+
+                animationFrameId = requestAnimationFrame(scrollLoop);
+            }
+
+            function startScrolling() {
+                if (autoScrollingCompleted) {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    fractionalPosition = 0;
+                    autoScrollingCompleted = false;
+                    setTimeout(() => {
+                        isScrolling = true;
+                        updateUIState(true);
+                        scrollLoop();
+                    }, 600);
+                    return;
+                }
+
+                isScrolling = true;
+                fractionalPosition = window.scrollY;
+                updateUIState(true);
+                scrollLoop();
+            }
+
+            function pauseScrolling() {
+                isScrolling = false;
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
+                updateUIState(false);
+            }
+
+            function updateUIState(active) {
+                if (active) {
+                    playBtn.classList.remove('paused');
+                    svgPlay.style.display = 'none';
+                    svgPause.style.display = 'block';
+                    svgMiniPlay.style.display = 'none';
+                    svgMiniPause.style.display = 'block';
+                    scrollStatusBadge.classList.add('visible');
+                } else {
+                    playBtn.classList.add('paused');
+                    svgPlay.style.display = 'block';
+                    svgPause.style.display = 'none';
+                    svgMiniPlay.style.display = 'block';
+                    svgMiniPause.style.display = 'none';
+                    scrollStatusBadge.classList.remove('visible');
+                }
+            }
+
+            // Click play/pause
+            playBtn.addEventListener('click', () => {
+                if (isScrolling) {
+                    pauseScrolling();
+                } else {
+                    startScrolling();
+                }
+            });
+
+            // Adjust Speed Buttons
+            speedUpBtn.addEventListener('click', () => {
+                let newSpeed = parseFloat((speed + 0.1).toFixed(1));
+                if (newSpeed <= 10.0) {
+                    setSpeed(newSpeed);
+                }
+            });
+
+            speedDownBtn.addEventListener('click', () => {
+                let newSpeed = parseFloat((speed - 0.1).toFixed(1));
+                if (newSpeed >= 0.1) {
+                    setSpeed(newSpeed);
+                }
+            });
+
+            function setSpeed(newSpeed) {
+                speed = newSpeed;
+                speedIndicator.textContent = newSpeed.toFixed(1) + 'x';
+            }
+
+            // Return to Top (Home)
+            topBtn.addEventListener('click', () => {
+                pauseScrolling();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+                fractionalPosition = 0;
+            });
+
+            // Minimize / Expand interactions
+            function toggleCollapse() {
+                widget.classList.toggle('collapsed');
+                if (widget.classList.contains('collapsed')) {
+                    miniTriggerBtn.style.display = 'flex';
+                } else {
+                    miniTriggerBtn.style.display = 'none';
+                }
+            }
+
+            toggleCollapseBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleCollapse();
+            });
+
+            miniTriggerBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleCollapse();
+            });
+
+            // Initialize display
+            setSpeed(speed);
+        })();
+    </script>
 </body>
 
 </html>
